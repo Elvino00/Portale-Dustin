@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registrati</title>
+    <style>
+        .errorlist {
+            color: red;
+            padding-left: 0;
+            list-style: none;
+        }
+        .non-field-errors {
+            color: red;
+            margin-bottom: 15px;
+            background: #ffeeee;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registrati</h1>
+    
+    <!-- Mostra SOLO errori non-field (non mostrerà più i duplicati) -->
+    {% if form.non_field_errors %}
+        <div class="non-field-errors">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        
+        <!-- Mostra i campi del form senza errori duplicati -->
+        <div class="form-field">
+            <label for="{{ form.username.id_for_label }}">Nome utente:</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <ul class="errorlist">
+                    {% for error in form.username.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <small class="help-text">{{ form.username.help_text }}</small>
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.email.id_for_label }}">Indirizzo email:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <ul class="errorlist">
+                    {% for error in form.email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.password.id_for_label }}">Password:</label>
+            {{ form.password }}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.password2.id_for_label }}">Conferma Password:</label>
+            {{ form.password2 }}
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>

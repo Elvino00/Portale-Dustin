@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-nu5^brf3h^eb^bv!*(!#&h*z1@pr9y7le)j5)s_8x*h8*7%c4@'
+SECRET_KEY = 'django-insecure-0z^__d39m2a+gw6+91w&^b^!6olr36!tv_j4ft)xi-vrpxbl81'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,13 +32,12 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "autenticazione",
-    'django_extensions',
+    "django_extensions",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.sites',
     'django.contrib.staticfiles',
 ]
 
@@ -123,6 +122,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LOGIN_REDIRECT_URL = 'auth:home' 
-LOGOUT_REDIRECT_URL = 'auth:login'  

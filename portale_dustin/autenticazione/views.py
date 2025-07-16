@@ -1,14 +1,37 @@
 from django.shortcuts import render, redirect
-from .forms import UserRegistrationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+# Create your views here.
+def register_view(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            new_user = form.save(commit=False)
-            new_user.set_password(form.cleaned_data['password'])
-            new_user.save()
-            return render(request, 'autenticazione/home.html', {'new_user': new_user})
+            form.save()
+            messages.success(request, "Registrazione completata con successo!. Ora puoi effettuare il log in.")
+            return redirect('register') 
     else:
-        form = UserRegistrationForm()
-    return render(request, 'autenticazione/register.html', {'form': form})
+        form = UserCreationForm()
+    return render(request, "autenticazione/registrazione.html" , {"form" : form})
+
+def login_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = AuthenticationForm()
+    return render(request, "autenticazione/login.html" , {"form" : form})
+
+@login_required
+def home_view(request):
+    return render(request, "autenticazione/home.html")
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "Logout effettuato con successo!")
+    return redirect('login')

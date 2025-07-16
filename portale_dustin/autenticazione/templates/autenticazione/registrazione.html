@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Registrazione</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'autenticazione/css/style.css' %}">
+</head>
+<body>
+    <h1>Registrazione</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form action="/accounts/register/" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button>Registrati</button>
+    </form>
+</body>
+</html>

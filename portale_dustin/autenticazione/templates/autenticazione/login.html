@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'autenticazione/css/style.css' %}">
+</head>
+<body>
+    <h1>Accedi</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form action="/accounts/login/" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button>Accedi</button>
+    </form>
+
+    <div style="margin-top: 20px; text-align: center;">
+        <p>Non hai un account? <a href="{% url 'register' %}">Registrati qui</a></p>
+    </div>
+</body>
+</html>

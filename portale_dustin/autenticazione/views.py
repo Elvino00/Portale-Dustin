@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm
+from .queries import get_summits
+from django.http import  JsonResponse
 
 # Create your views here.
 def register_view(request): #vista per la registrazione
@@ -39,3 +41,17 @@ def logout_view(request): #view di logout
     logout(request)
     messages.success(request, "Logout effettuato con successo!")
     return redirect('login') #dopo aver effettuato il logout, ritorna alla pagina di login
+
+def test_crate_connection(request):
+    try:
+        data = get_summits()
+        return JsonResponse({
+            'status': 'success',
+            'data': data,
+            'count': len(data)
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)

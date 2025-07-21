@@ -1,22 +1,22 @@
 # Importa il modulo SQLAlchemy con alias 'sa' per comodità
 import sqlalchemy as sa
-
-# Importa le classi necessarie per la gestione delle sessioni da SQLAlchemy
+from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from typing import Optional, List, Dict, Any, Union
 
 # Definizione della classe CrateDBClient che implementa il pattern Singleton
 class CrateDBClient:
     # Variabile di classe per memorizzare l'unica istanza del Singleton
-    _instance = None
+    _instance: Optional['CrateDBClient'] = None
     
     # Variabile di classe per memorizzare l'engine di connessione al database
-    _engine = None
+    _engine: Optional[Engine] = None
     
     # Variabile di classe per la factory che crea sessioni
-    _session_factory = None
+    _session_factory: Optional[scoped_session] = None
 
     # Metodo speciale __new__ che controlla la creazione dell'istanza
-    def __new__(cls):
+    def __new__(cls) -> 'CrateDBClient':
         # Verifica se esiste già un'istanza
         if cls._instance is None:
             # Se non esiste, crea una nuova istanza
@@ -28,7 +28,7 @@ class CrateDBClient:
 
     # Metodo di classe per l'inizializzazione della connessione
     @classmethod
-    def _initialize(cls):
+    def _initialize(cls) -> None:
         """Inizializza la connessione al database"""
         # Stringa di connessione per CrateDB (formato: crate://host:port)
         dburi = "crate://localhost:4200"
@@ -46,15 +46,20 @@ class CrateDBClient:
 
     # Property per accedere alle sessioni
     @property
-    def session(self):
+    def session(self) -> scoped_session:
         """Restituisce una nuova sessione"""
+        if self._session_factory is None:
+            raise RuntimeError("Session factory not initialized. Call _initialize() first.")
         # Restituisce una nuova sessione dalla factory
         return self._session_factory()
 
     # Metodo di classe per eseguire query
     @classmethod
-    def execute_query(cls, query, params=None):
+    def execute_query(cls, query: str, params: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """Esegue una query e restituisce i risultati"""
+        if cls._engine is None:
+            raise RuntimeError("Database engine not initialized. Call _initialize() first.")
+            
         try:
             # Apre una connessione dall'engine
             with cls._engine.connect() as connection:

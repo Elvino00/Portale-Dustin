@@ -4,8 +4,9 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm
-from .queries import get_summits
+from .queries import CrateDBQueries
 from django.http import  JsonResponse
+import json
 
 # Create your views here.
 def register_view(request): #vista per la registrazione
@@ -44,12 +45,26 @@ def logout_view(request): #view di logout
 
 def test_crate_connection(request):
     try:
-        data = get_summits()
+        # Ottieni i dati dalla tua funzione
+        data = CrateDBQueries.get_some_ecg_statistics()
+        
+        # Verifica manualmente la serializzabilità (solo per debug)
+        try:
+            json.dumps(data)  # Prova a serializzare
+        except TypeError as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'error: {str(e)}',
+                'debug': 'Verify the data contains no non-serializable objects'
+            }, status=500)
+        
+        # Restituisci i dati come JSON
         return JsonResponse({
             'status': 'success',
             'data': data,
             'count': len(data)
         })
+    
     except Exception as e:
         return JsonResponse({
             'status': 'error',

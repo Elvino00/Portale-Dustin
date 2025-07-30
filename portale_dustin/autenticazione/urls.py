@@ -1,10 +1,9 @@
 from django.urls import path
-from . import views
+from .views import registrazione, VistaLogin
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('register/' , views.register_view , name="register"),
-    path('login/' , views.login_view , name="login"),
-    path('home/' , views.home_view , name="home"),
-    path('logout/' , views.logout_view , name="logout"),
-    path('crate/', views.test_crate_connection, name = "sensors_data")
+    path('registrazione/', registrazione, name='registrazione'),
+    path('login/', VistaLogin.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='autenticazione:login'), name='logout'),
 ]

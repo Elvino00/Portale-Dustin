@@ -1,0 +1,33 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'dashboard/css/style.css' %}">
+
+<head>
+    <title>Dashboard Veicoli</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logout-container">
+            <form action="{% url 'autenticazione:logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+        <h1>Benvenuto, {{ user.nome }} {{ user.cognome }}</h1>
+        
+        <div class="veicoli-menu">
+            <h2>Seleziona un veicolo:</h2>
+            <ul class="veicoli-list">
+                {% for veicolo in veicoli %}
+                <li>
+                    <a href="{% url 'dashboard:dettaglio_veicolo' id_device=veicolo.id_device %}" class="veicolo-link">
+                        {{ veicolo.nome_veicolo }}
+                    </a>
+                </li>
+                {% empty %}
+                <li>Nessun veicolo disponibile</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>

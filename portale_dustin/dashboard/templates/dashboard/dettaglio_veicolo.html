@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dettaglio {{ device.id_device }}</title>
+    <!-- Importa Plotly.js da CDN -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Dettagli veicolo: {{ device.nome_veicolo }}</h1>
+    <p>ID: {{ device.id_device }}</p>
+    
+    {% if error %}
+        <div style="color: red;">{{ error }}</div>
+    {% endif %}
+    
+    {% if graph_html %}
+        <h2>Statistiche ECG dal {{ start_date }} al {{ end_date }}</h2>
+        <div>
+            {{ graph_html|safe }}
+        </div>
+    {% endif %}
+    
+    <a href="{% url 'dashboard:home' %}">Torna alla home</a>
+</body>
+</html>

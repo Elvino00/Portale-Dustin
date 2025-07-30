@@ -1,30 +1,33 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'autenticazione/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'autenticazione/css/style.css' %}">
 </head>
 <body>
-    <h1>Accedi</h1>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <form action="/accounts/login/" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button>Accedi</button>
-    </form>
-
-    <div style="margin-top: 20px; text-align: center;">
-        <p>Non hai un account? <a href="{% url 'register' %}">Registrati qui</a></p>
+    <div class="auth-container">
+        <h1 class="auth-title">Login</h1>
+        
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <ul class="errorlist">
+                    <li>Email o password non validi</li>
+                </ul>
+            {% endif %}
+            
+            {{ form.as_p }}
+            
+            <button type="submit" class="auth-button">Accedi</button>
+        </form>
+        
+        <div class="auth-link">
+            Non hai un account? <a href="{% url 'autenticazione:registrazione' %}">Registrati</a>
+        </div>
     </div>
 </body>
 </html>

@@ -1,82 +1,37 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrazione</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'autenticazione/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'autenticazione/css/style.css' %}">
 </head>
 <body>
-    <h1>Registrazione</h1>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <form action="/accounts/register/" method="post">
-        {% csrf_token %}
+    <div class="auth-container">
+        <h1 class="auth-title">Registrazione</h1>
         
-        <div class="form-field">
-            <label for="{{ form.username.id_for_label }}">Nome utente:</label>
-            {{ form.username }}
-            {% if form.username.errors %}
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            
+            {% if form.errors %}
                 <ul class="errorlist">
-                    {% for error in form.username.errors %}
-                        <li>{{ error }}</li>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
                     {% endfor %}
                 </ul>
             {% endif %}
+            
+            {{ form.as_p }}
+            
+            <button type="submit" class="auth-button">Registrati</button>
+        </form>
+        
+        <div class="auth-link">
+            Hai già un account? <a href="{% url 'autenticazione:login' %}">Accedi</a>
         </div>
-
-        <div class="form-field">
-            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}:</label>
-            {{ form.email }}
-            {% if form.email.errors %}
-                <ul class="errorlist">
-                    {% for error in form.email.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-
-        <div class="form-field">
-            <label for="{{ form.password.id_for_label }}">Password:</label>
-            {{ form.password }}
-            {% if form.password.errors %}
-                <ul class="errorlist">
-                    {% for error in form.password.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-
-        <div class="form-field">
-            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}:</label>
-            {{ form.password2 }}
-            {% if form.password2.errors %}
-                <ul class="errorlist">
-                    {% for error in form.password2.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-
-        {% if form.non_field_errors %}
-            <ul class="errorlist">
-                {% for error in form.non_field_errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-        <button>Registrati</button>
-    </form>
+    </div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 from .crate_client import crate_db
 from typing import List, Dict, Any, Optional
+from loguru import logger
 
 class CrateDBQueries:
     @staticmethod
@@ -93,7 +94,17 @@ class CrateDBQueries:
         return crate_db.execute_query(query, {'threshold': threshold})
     
     @staticmethod
-    def get_some_ecg_statistics(ts_ms_start,ts_ms_end) -> List[Dict[str, Any]]:
+    def get_some_ecg_statistics(ts_ms_start,ts_ms_end,id_device) -> List[Dict[str, Any]]:
+
+        #Costruzione entity_id
+        letters = id_device[:2]  # Prende i primi due caratteri 'bb'
+        numbers = id_device[2:]  # Prende i rimanenti caratteri '01'
+
+        
+        entity_id = f"urn:ngsi-ld:{letters.capitalize()}:{numbers}" #costruisce la stringa
+
+        
+
         query = """SELECT ts_ms AS "time",   
             CAST(data_json['BPM'] AS INTEGER) as BPM,
             CAST(data_json['HRV_SDNN'] AS DOUBLE) as HRV_SDNN,
@@ -106,7 +117,7 @@ class CrateDBQueries:
             
             FROM "mtclient_1"."etblackbox"
             WHERE sensor    = 'ecg'
-            AND entity_id = 'urn:ngsi-ld:Bb:01'
+            AND entity_id = :entity_id
             AND ts_ms >= :ts_ms_start
             AND ts_ms <= :ts_ms_end
             ORDER BY ts_ms;
@@ -116,7 +127,8 @@ class CrateDBQueries:
 
         params = {
             'ts_ms_start' : ts_ms_start,
-            'ts_ms_end' : ts_ms_end
+            'ts_ms_end' : ts_ms_end,
+            'entity_id' : entity_id
         }
 
         return crate_db.execute_query(query,params)

@@ -21,7 +21,7 @@ def home(request):
 def dettaglio_veicolo(request, id_device):
     # Recupera il dispositivo
     device = get_object_or_404(Device, id_device=id_device)
-    
+   
     # Parametri fissi per il test (stessi della dashboard_view)
     start_date_str = "18-07-2025"
     end_date_str = "21-07-2025"
@@ -67,7 +67,7 @@ def dettaglio_veicolo(request, id_device):
 
     try:
        
-        data = CrateDBQueries.get_some_ecg_statistics(ts_start, ts_end)
+        data = CrateDBQueries.get_some_ecg_statistics(ts_start, ts_end ,device.id_device)
         
         if not data:
             return render(request, 'dashboard/dettaglio_veicolo.html', {
